@@ -1,4 +1,5 @@
 from bandit import *
+from exp3 import *
 import numpy.random as rd
 
 
@@ -7,8 +8,8 @@ bandits = list()
 accum = list()
 for i in range(1,K):
     tam_dist = rd.randint(128, size=1)
-    base_loc = rd.randn(low=10.0, high= 100.0)
-    base_var = rd.randn(low=0.0, high=5.0)
+    base_loc = (rd.rand() + 10.0)*100.0 - 10.0
+    base_var = rd.rand() * 5
     bandits.append(bandit(rd.normal(loc=base_loc, scale=base_var, size=tam_dist)))
     accum.append(0)
 
@@ -19,6 +20,16 @@ for i in range(1, 10):
         reward = b.next_reward()
         this_iter.append(reward)
         accum[i] += reward
-    print(this_iter)
+    #print(this_iter)
     this_iter = list()
-print(accum)
+#print(accum)
+
+T = 1000 # The simulation will run for 1000 iterations
+algo = Exp3(bandits)
+my_reward, chosen_sequence, worst_case_regret, optimal_sequence = algo.work(0,T,0.2)
+print("My reward was: ", my_reward)
+print("The chosen sequence was:")
+print(chosen_sequence)
+print("The best sequence was:")
+print(optimal_sequence)
+print("Overall worst case regret was: ", sum(worst_case_regret))

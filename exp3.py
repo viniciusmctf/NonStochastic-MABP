@@ -3,7 +3,7 @@ import math
 
 # Exponential-weight algorithm for Exploration and Exploitation
 class Exp3:
-    # \param K is the number of bandit arms
+    # \param bandit_arr is the array of arms to pull
     def __init__(self, bandit_arr):
         self.arms = bandit_arr
         self.K = len(bandit_arr)
@@ -17,7 +17,7 @@ class Exp3:
         p = list()
         wsum = sum(self.w[t])
         for wi in self.w[t]:
-            prob = (1-gama)*(wi/wsum) + (gama/K)
+            prob = (1-gama)*(wi/wsum) + (gama/self.K)
             p.append(prob)
         return p
 
@@ -30,7 +30,7 @@ class Exp3:
         for i,p in enumerate(prob_dist):
             cur_index = i
             accum += p
-            if p > rand_val
+            if p > rand_val:
                 return cur_index
         return cur_index
 
@@ -40,26 +40,34 @@ class Exp3:
     # \retval is the estimated best weak regret
     def work(self, Ts, Te, gama):
         chosen_indexes = list()
+        optimal_sequence = list()
         wcr = list() # worst case regrets
         accum_rewards = 0.0
-        if len(w) < Ts:
+        if len(self.w) < Ts:
             return -1,[-1],[-1] # Error
         for t in range(Ts,Te):
             p = self.probabilities(t, gama)
             i = self.choose_index(p, rd.rand())
             rewards = list()
-            for arm in self.arms:
-                rewards.append(arm.next_reward())
+            best_case = 0.0
+            bci = 0
+            for index,arm in enumerate(self.arms):
+                tmp = arm.next_reward()
+                if best_case < tmp:
+                    best_case = tmp
+                    bci = index
+                rewards.append(tmp)
             xit = rewards[i]
             rwds = [0] * self.K
             rwds[i] = xit/p[i]
             next_w = list()
-            for j,w in enumerate(self.w[t]):
+            for j,wj in enumerate(self.w[t]):
                 exponential = (gama * rwds[j])/self.K
-                tmp = w * math.exp(exponential)
+                tmp = wj * math.exp(exponential)
                 next_w.append(tmp)
-            w.append(next_w)
+            self.w.append(next_w)
+            optimal_sequence.append(bci)
             chosen_indexes.append(i)
             wcr.append(max(rewards)-xit)
             accum_rewards += xit
-        return accum_rewards, chosen_indexes, wcr
+        return accum_rewards, chosen_indexes, wcr, optimal_sequence
