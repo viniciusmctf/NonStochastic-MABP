@@ -28,9 +28,10 @@ class Exp3:
         accum = 0.0
         cur_index = 0
         for i,p in enumerate(prob_dist):
+            print(rand_val, accum, p)
             cur_index = i
             accum += p
-            if p > rand_val:
+            if accum > rand_val:
                 return cur_index
         return cur_index
 

@@ -26,10 +26,14 @@ for i in range(1, 10):
 
 T = 1000 # The simulation will run for 1000 iterations
 algo = Exp3(bandits)
-my_reward, chosen_sequence, worst_case_regret, optimal_sequence = algo.work(0,T,0.2)
+my_reward, chosen_sequence, worst_case_regret, optimal_sequence = algo.work(0,T,1)
 print("My reward was: ", my_reward)
 print("The chosen sequence was:")
 print(chosen_sequence)
 print("The best sequence was:")
 print(optimal_sequence)
 print("Overall worst case regret was: ", sum(worst_case_regret))
+accuracy = list()
+for i,a in enumerate(chosen_sequence):
+    accuracy.append(a is optimal_sequence[i])
+print("Overall accuracy is: ", sum(accuracy)/T)
