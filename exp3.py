@@ -17,7 +17,7 @@ class Exp3:
         p = list()
         wsum = sum(self.w[t])
         for wi in self.w[t]:
-            prob = (1-gama)*(wi/wsum) + (gama/self.K)
+            prob = (1-gama)*(wi/wsum) + (gama/float(self.K))
             p.append(prob)
         return p
 
@@ -28,7 +28,7 @@ class Exp3:
         accum = 0.0
         cur_index = 0
         for i,p in enumerate(prob_dist):
-            print(rand_val, accum, p)
+            # print(rand_val, accum, p)
             cur_index = i
             accum += p
             if accum > rand_val:

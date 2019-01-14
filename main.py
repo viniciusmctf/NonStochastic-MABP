@@ -1,7 +1,8 @@
 from bandit import *
 from exp3 import *
+from exp3p import *
 import numpy.random as rd
-
+import math
 
 K = 10 # meaning there will be 10 arms to pull
 bandits = list()
@@ -25,13 +26,28 @@ for i in range(1, 10):
 #print(accum)
 
 T = 1000 # The simulation will run for 1000 iterations
-algo = Exp3(bandits)
-my_reward, chosen_sequence, worst_case_regret, optimal_sequence = algo.work(0,T,1)
+algo = Exp3P(bandits, 2*math.sqrt(K*T), 0.3, T)
+algo2 = Exp3(bandits)
+my_reward, chosen_sequence, worst_case_regret, optimal_sequence = algo.work()
+
 print("My reward was: ", my_reward)
-print("The chosen sequence was:")
-print(chosen_sequence)
-print("The best sequence was:")
-print(optimal_sequence)
+# print("The chosen sequence was:")
+# print(chosen_sequence)
+# print("The best sequence was:")
+# print(optimal_sequence)
+print("Overall worst case regret was: ", sum(worst_case_regret))
+accuracy = list()
+for i,a in enumerate(chosen_sequence):
+    accuracy.append(a is optimal_sequence[i])
+print("Overall accuracy is: ", sum(accuracy)/T)
+
+my_reward, chosen_sequence, worst_case_regret, optimal_sequence = algo2.work(0,T-1,0.3)
+
+print("My reward was: ", my_reward)
+# print("The chosen sequence was:")
+# print(chosen_sequence)
+# print("The best sequence was:")
+# print(optimal_sequence)
 print("Overall worst case regret was: ", sum(worst_case_regret))
 accuracy = list()
 for i,a in enumerate(chosen_sequence):
